@@ -14,7 +14,7 @@ typedef struct{
 	int end;
 }parameters;
 
-void * bubble_sort(parameters * params);
+void * bubble_sort(void * params);
 //void * selection_sort(parameters * params);
 //void * insertion_sort(parameters * params);
 
@@ -72,8 +72,8 @@ int main(){
 
 //冒泡排序
 //!!!优化为双向冒泡排序：从后到前遍历将最小值归位
-void * bubble_sort(parameters * params){
-	parameters * data = params;
+void * bubble_sort(void * params){
+	parameters * data = (parameters *) params;
 	int start = data->start;
 	int end = data->end;
 	int i, j, swap_temp;
@@ -92,9 +92,10 @@ void * bubble_sort(parameters * params){
 		}
 		if(is_sorted == true){
 		//若此次遍历后数组已经有序则终止排序
-			return;
+			return (void *) 1;
 		}
 	}
+	return (void *) 1;
 }
 /*
 //选择排序
