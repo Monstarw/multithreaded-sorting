@@ -14,9 +14,9 @@ typedef struct{
 	int end;
 }parameters;
 
-void bubble_sort(parameters * params);
-//void selection_sort(parameters * params);
-//void insertion_sort(parameters * params);
+void * bubble_sort(parameters * params);
+//void * selection_sort(parameters * params);
+//void * insertion_sort(parameters * params);
 
 int main(){
 	int random_numbers[kNumberCount];
@@ -72,7 +72,7 @@ int main(){
 
 //冒泡排序
 //!!!优化为双向冒泡排序：从后到前遍历将最小值归位
-void bubble_sort(parameters * params){
+void * bubble_sort(parameters * params){
 	parameters * data = params;
 	int start = data->start;
 	int end = data->end;
