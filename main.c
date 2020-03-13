@@ -14,7 +14,7 @@ typedef struct parameters{
 }parameters;
 
 void * bubble_sort(void * params);
-//void * selection_sort(parameters * params);
+void * selection_sort(void * params);
 //void * insertion_sort(parameters * params);
 
 int main(){
