@@ -35,7 +35,7 @@ int main(){
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));
 		//parameters * param0 = (parameters *) malloc(sizeof(parameters));
-		param[i]->numbers = random_numbers;
+		param[i]->numbers = &random_numbers;
 		param[i]->start = j;
 		j = j + kNumberCount / kThreadCount;
 		param[i]->end = j - 1;
