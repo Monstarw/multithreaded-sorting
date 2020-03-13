@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-//!!!加入线程后在linux环境下进行后续测试
 #include <time.h>
 #include <stdbool.h>
 #define kNumberCount 10	//定义乱序数组中元素个数
@@ -46,7 +45,7 @@ int main(){
 	pthread_t thread[kThreadCount];
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&thread[i], NULL, bubble_sort, param[i]);
+		pthread_create(&thread[i], NULL, bubble_sort, (void *) param[i]);
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(thread[i], NULL);
@@ -92,10 +91,10 @@ void * bubble_sort(void * params){
 		}
 		if(is_sorted == true){
 		//若此次遍历后数组已经有序则终止排序
-			return (void *) 1;
+			return NULL;
 		}
 	}
-	return (void *) 1;
+	return NULL;
 }
 /*
 //选择排序
