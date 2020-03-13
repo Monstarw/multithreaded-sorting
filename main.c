@@ -15,7 +15,7 @@ typedef struct parameters{
 
 void * bubble_sort(void * params);
 void * selection_sort(void * params);
-//void * insertion_sort(parameters * params);
+void * insertion_sort(void * params);
 
 int main(){
 	int random_numbers[kNumberCount];
@@ -44,7 +44,7 @@ int main(){
 	pthread_t thread[kThreadCount];
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&thread[i], NULL, selection_sort, (void *) param[i]);
+		pthread_create(&thread[i], NULL, insertion_sort, (void *) param[i]);
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(thread[i], NULL);
@@ -60,7 +60,7 @@ int main(){
 	//insertion_sort(random_numbers, 0, kNumberCount);
 	
 	//Êä³öÅÅÐò½á¹û
-	printf("\n");
+	printf("\n\n");
 	for(i = 0; i < kNumberCount; i++){
 		printf("%d\t", random_numbers[i]);
 	}
@@ -120,20 +120,21 @@ void * selection_sort(void * params){
 	}
 	return NULL;
 }
-/*
-//²åÈëÅÅÐò
-void insertion_sort(parameters * params){
-	int i, j, swap_temp;
-	for(i = start + 1; i < end; i++){
-		for(){
 
+//²åÈëÅÅÐò
+void * insertion_sort(void * params){
+	parameters * data = (parameters *) params;
+	int start = data->start;
+	int end = data->end;
+	int i, j, key;
+	for(i = start + 1; i <= end; i++){
+		key = (*data->numbers)[i];
+		j = i - 1;
+		while((j >= start) && ((*data->numbers)[j] > key)){
+			(*data->numbers)[j + 1] = (*data->numbers)[j];
+			j--;
 		}
-		
-		
-		
-		swap_temp = numbers[i];
-		numbers[i] = numbers[j];
-		numbers[j] = swap_temp;
+		(*data->numbers)[j + 1] = key;
 	}
+	return NULL;
 }
-*/
