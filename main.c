@@ -40,6 +40,7 @@ int main(){
 	//printf("请输入使用的线程个数(3/5/6):");
 	//scanf("%d", &thread_count);
 
+	//分配各线程所需参数
 	parameters * param[kThreadCount];
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));
@@ -49,13 +50,13 @@ int main(){
 		param[i]->end = j - 1;
 	}
 	
-	pthread_t thread[kThreadCount];
+	pthread_t threads[kThreadCount];
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&thread[i], NULL, bubble_sort, (void *) param[i]);
+		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);
 	}
 	for(i = 0; i < kThreadCount; i++){
-		pthread_join(thread[i], NULL);
+		pthread_join(threads[i], NULL);
 	}
 	
 	//输出排序结果
