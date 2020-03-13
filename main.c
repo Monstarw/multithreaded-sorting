@@ -83,7 +83,7 @@ void * bubble_sort(void * params){
 	for(i = start; i <= end; i++){
 	//数组的总遍历
 		bool is_sorted = true;
-		for(j = 0; j <= end - 1 - i; j++){
+		for(j = start; j <= end - 1 - i; j++){
 		//比较每一对相邻元素，同时避免对最大元素的多余比较
 			if((*data->numbers)[j] > (*data->numbers)[j + 1]){
 			//比较相邻元素大小，前面>后面则交换
