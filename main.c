@@ -51,6 +51,7 @@ int main(){
 	
 	//Êä³öÅÅĞò½á¹û
 	printf("\n\n");
+	j = 0;
 	for(i = 0; i < kThreadCount; i++){
 		for(k = 0; k < kNumberCount / kThreadCount; k++){
 			printf("%d\t", random_numbers[j]);
