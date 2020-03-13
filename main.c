@@ -84,7 +84,7 @@ void * bubble_sort(void * params){
 			//比较相邻元素大小，前面>后面则交换
 				is_sorted = false;
 				swap_temp = *data->numbers[j];
-				*data->numbers[j]) = *data->numbers[j + 1];
+				*data->numbers[j] = *data->numbers[j + 1];
 				*data->numbers[j + 1] = swap_temp;
 			}
 		}
