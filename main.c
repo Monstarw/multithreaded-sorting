@@ -25,7 +25,7 @@ int main(){
 	srand((unsigned) time(0));	//初始化随机数生成种子
 	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组
 		random_numbers[i] = rand() % kNumberCap;
-		printf("%d\n", random_numbers[i]);
+		printf("%d\t", random_numbers[i]);
 	}
 	
 	//printf("请输入使用的线程个数(3/5/6):");
@@ -62,7 +62,7 @@ int main(){
 	//输出排序结果
 	printf("\n");
 	for(i = 0; i < kNumberCount; i++){
-		printf("%d\n", random_numbers[i]);
+		printf("%d\t", random_numbers[i]);
 	}
 	
 	return 0;
@@ -76,10 +76,10 @@ void * bubble_sort(void * params){
 	int end = data->end;
 	int i, j, swap_temp;
 	
-	for(i = start; i < end; i++){
+	for(i = start; i <= end; i++){
 	//数组的总遍历
 		bool is_sorted = true;
-		for(j = 0; j < end - 1 - i; j++){
+		for(j = 0; j <= end - 1 - i; j++){
 		//比较每一对相邻元素，同时避免对最大元素的多余比较
 			if((*data->numbers)[j] > (*data->numbers)[j + 1]){
 			//比较相邻元素大小，前面>后面则交换
