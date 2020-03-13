@@ -62,7 +62,7 @@ int main(){
 	//输出排序结果
 	printf("=========\n");
 	for(i = 0; i < kNumberCount; i++){
-		printf("%d\n", random_numbers[i]);
+		printf("%d\t", random_numbers[i]);
 	}
 	
 	return 0;
@@ -80,12 +80,12 @@ void * bubble_sort(void * params){
 		bool is_sorted = true;
 		for(j = 0; j < end - 1 - i; j++){
 		//比较每一对相邻元素，同时避免对最大元素的多余比较
-			if(*(data->numbers[j]) > *(data->numbers[j + 1])){
+			if(*data->numbers[j] > *data->numbers[j + 1]){
 			//比较相邻元素大小，前面>后面则交换
 				is_sorted = false;
-				swap_temp = *(data->numbers[j]);
-				*(data->numbers[j]) = *(data->numbers[j + 1]);
-				*(data->numbers[j + 1]) = swap_temp;
+				swap_temp = *data->numbers[j];
+				*data->numbers[j]) = *data->numbers[j + 1];
+				*data->numbers[j + 1] = swap_temp;
 			}
 		}
 		if(is_sorted == true){
