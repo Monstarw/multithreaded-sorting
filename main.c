@@ -25,9 +25,18 @@ int main(){
 	srand((unsigned) time(0));	//初始化随机数生成种子
 	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组
 		random_numbers[i] = rand() % kNumberCap;
-		printf("%d\n", random_numbers[i]);
 	}
 	
+	//输出乱序数组
+	for(i = 0; i < kThreadCount; i++){
+		for(k = 0; k < kNumberCount / kThreadCount; k++){
+			printf("%d\t", random_numbers[j]);
+			j++;
+		}
+		printf("\n");
+	}
+	j = 0;
+
 	//printf("请输入使用的线程个数(3/5/6):");
 	//scanf("%d", &thread_count);
 
@@ -50,7 +59,7 @@ int main(){
 	}
 	
 	//输出排序结果
-	printf("\n\n");
+	printf("\n");
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
 		for(k = 0; k < kNumberCount / kThreadCount; k++){
