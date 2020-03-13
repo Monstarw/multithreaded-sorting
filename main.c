@@ -44,7 +44,7 @@ int main(){
 	pthread_t thread[kThreadCount];
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&thread[i], NULL, bubble_sort, (void *) param[i]);
+		pthread_create(&thread[i], NULL, selection_sort, (void *) param[i]);
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(thread[i], NULL);
@@ -64,7 +64,7 @@ int main(){
 	for(i = 0; i < kNumberCount; i++){
 		printf("%d\t", random_numbers[i]);
 	}
-	
+	printf("\n");
 	return 0;
 }
 
@@ -96,27 +96,31 @@ void * bubble_sort(void * params){
 	}
 	return NULL;
 }
-/*
+
 //选择排序
 //!!!优化为双向选择排序：同时将最大值归到最后
-void selection_sort(parameters * params){
+void * selection_sort(void * params){
+	parameters * data = (parameters *) params;
+	int start = data->start;
+	int end = data->end;
 	int i, j, min_index, swap_temp;
-	for(i = start; i < end; i++){
+	for(i = start; i <= end; i++){
 	//数组的总遍历
 		min_index = i;	//初始化最小元素下标
-		for(j = i + 1; j < end; j++){
+		for(j = i + 1; j <= end; j++){
 		//找出本次遍历中最小元素的下标
-			if(numbers[j] < numbers[min_index]){
+			if((*data->numbers)[j] < (*data->numbers)[min_index]){
 				min_index = j;
 			}
 		}
 		//将本次遍历中最小元素换到最前端
-		swap_temp = numbers[i];
-		numbers[i] = numbers[min_index];
-		numbers[min_index] = swap_temp;
+		swap_temp = (*data->numbers)[i];
+		(*data->numbers)[i] = (*data->numbers)[min_index];
+		(*data->numbers)[min_index] = swap_temp;
 	}
+	return NULL;
 }
-
+/*
 //插入排序
 void insertion_sort(parameters * params){
 	int i, j, swap_temp;
