@@ -7,7 +7,7 @@
 #define kNumberCap 100	//定义乱序数组中元素值的上限
 #define kThreadCount 1
 
-typedef struct{
+typedef struct parameters{
 	int (* numbers)[kNumberCount];
 	int start;
 	int end;
@@ -40,7 +40,6 @@ int main(){
 		j = j + kNumberCount / kThreadCount;
 		param[i]->end = j - 1;
 	}
-	
 	
 	pthread_t thread[kThreadCount];
 	
