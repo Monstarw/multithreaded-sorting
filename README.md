@@ -19,3 +19,7 @@ Linux + GCC
 ### 编译指令
 
 gcc main.c -lpthread
+
+### 运行指令
+
+./a.out
