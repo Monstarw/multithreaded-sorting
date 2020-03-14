@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #define kNumberCount 90		//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
-#define kThreadCount 6
-#define kNumbersPerRow 15
+#define kThreadCount 3
+#define kNumbersPerRow 30
 
 typedef struct parameters{
 	int (* numbers)[kNumberCount];
@@ -14,19 +14,27 @@ typedef struct parameters{
 	int end;
 }parameters;
 
+void initialize_threads(int numbers[]);
 void * bubble_sort(void * params);
 void * selection_sort(void * params);
 void * insertion_sort(void * params);
 void output(int array[]);
 
 int main(){
+	int i;
 	int random_numbers[kNumberCount];
-	int i, j = 0;
+	int nums_for_bubble[kNumberCount];
+	int nums_for_selection[kNumberCount];
+	int nums_for_insertion[kNumberCount];
+	
 	//int thread_count;	//使用的线程个数
 	
 	srand((unsigned) time(0));	//初始化随机数生成种子
 	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组
 		random_numbers[i] = rand() % kNumberCap;
+		nums_for_bubble[i] = random_numbers[i];
+		nums_for_selection[i] = random_numbers[i];
+		nums_for_insertion[i] = random_numbers[i];
 	}
 	
 	//输出乱序数组
@@ -35,23 +43,7 @@ int main(){
 	//scanf("%d", &thread_count);
 
 	//分配各线程所需参数
-	parameters * param[kThreadCount];
-	for(i = 0; i < kThreadCount; i++){
-		param[i] = (parameters *) malloc(sizeof(parameters));
-		param[i]->numbers = &random_numbers;
-		param[i]->start = j;
-		j = j + kNumberCount / kThreadCount;
-		param[i]->end = j - 1;
-	}
-	
-	pthread_t threads[kThreadCount];
-	
-	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);
-	}
-	for(i = 0; i < kThreadCount; i++){
-		pthread_join(threads[i], NULL);
-	}
+	initialize_threads(nums_for_bubble);
 	
 	//归并各个线程的排序结果
 	/*
@@ -66,8 +58,30 @@ int main(){
 	*/
 	
 	//输出数组
-	output(random_numbers);
+	
 	return 0;
+}
+
+void initialize_threads(int numbers[]){
+	int i, j = 0;
+	parameters * param[kThreadCount];
+	for(i = 0; i < kThreadCount; i++){
+		param[i] = (parameters *) malloc(sizeof(parameters));
+		param[i]->numbers = &numbers;
+		param[i]->start = j;
+		j = j + kNumberCount / kThreadCount;
+		param[i]->end = j - 1;
+	}
+	
+	pthread_t threads[kThreadCount];
+	
+	for(i = 0; i < kThreadCount; i++){
+		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);
+	}
+	for(i = 0; i < kThreadCount; i++){
+		pthread_join(threads[i], NULL);
+	}
+	output(numbers);
 }
 
 //冒泡排序
