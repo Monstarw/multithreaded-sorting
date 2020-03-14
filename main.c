@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #define kNumberCount 90000	//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
-#define kThreadCount 3
+#define kThreadCount 6
 #define kNumbersPerRow 25
 
 typedef struct parameters{
@@ -17,6 +17,7 @@ typedef struct parameters{
 void * bubble_sort(void * params);
 void * selection_sort(void * params);
 void * insertion_sort(void * params);
+void output(int array[]);
 
 int main(){
 	int random_numbers[kNumberCount];
@@ -108,6 +109,8 @@ int main(){
 	}
 	printf("\n");
 	*/
+	
+	/*
 	j = 0;
 	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
 		for(k = 0; k < kNumbersPerRow; k++){
@@ -116,6 +119,8 @@ int main(){
 		}
 		printf("\n");
 	}
+	*/
+	output(random_numbers);
 	return 0;
 }
 
@@ -188,4 +193,16 @@ void * insertion_sort(void * params){
 		(*data->numbers)[j + 1] = key;
 	}
 	return NULL;
+}
+
+//输出数组
+void output(int array[]){
+	int i, j = 0, k;
+	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
+		for(k = 0; k < kNumbersPerRow; k++){
+			printf("%d\t", array[j]);
+			j++;
+		}
+		printf("\n");
+	}
 }
