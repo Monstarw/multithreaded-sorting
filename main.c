@@ -3,10 +3,10 @@
 #include <pthread.h>
 #include <time.h>
 #include <stdbool.h>
-#define kNumberCount 90000	//定义乱序数组中元素个数
+#define kNumberCount 90		//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
 #define kThreadCount 6
-#define kNumbersPerRow 25
+#define kNumbersPerRow 15
 
 typedef struct parameters{
 	int (* numbers)[kNumberCount];
@@ -21,7 +21,7 @@ void output(int array[]);
 
 int main(){
 	int random_numbers[kNumberCount];
-	int i, j = 0, k;
+	int i, j = 0;
 	//int thread_count;	//使用的线程个数
 	
 	srand((unsigned) time(0));	//初始化随机数生成种子
@@ -30,26 +30,6 @@ int main(){
 	}
 	
 	//输出乱序数组
-	/*
-	for(i = 0; i < kThreadCount; i++){
-		for(k = 0; k < kNumberCount / kThreadCount; k++){
-			printf("%d\t", random_numbers[j]);
-			j++;
-		}
-		printf("\n");
-	}
-	j = 0;
-	*/
-	/*
-	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
-		for(k = 0; k < kNumbersPerRow; k++){
-			printf("%d\t", random_numbers[j]);
-			j++;
-		}
-		printf("\n");
-	}
-	j = 0;
-	*/
 	
 	//printf("请输入使用的线程个数(3/5/6):");
 	//scanf("%d", &thread_count);
@@ -67,27 +47,14 @@ int main(){
 	pthread_t threads[kThreadCount];
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);
+		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(threads[i], NULL);
 	}
 	
-	/*
-	//输出各线程排序结果
-	printf("\n");
-	j = 0;
-	for(i = 0; i < kThreadCount; i++){
-		for(k = 0; k < kNumberCount / kThreadCount; k++){
-			printf("%d\t", random_numbers[j]);
-			j++;
-		}
-		printf("\n");
-	}
-	printf("\n");
-	*/
-	
 	//归并各个线程的排序结果
+	/*
 	parameters * merge_param = (parameters *) malloc(sizeof(parameters));
 	merge_param->numbers = &random_numbers;
 	merge_param->start = 0;
@@ -96,30 +63,9 @@ int main(){
 	pthread_t merge;
 	pthread_create(&merge, NULL, bubble_sort, (void *) merge_param);
 	pthread_join(merge, NULL);
-	
-	//输出归并后最终数组
-	/*
-	j = 0;
-	for(i = 0; i < kThreadCount; i++){
-		for(k = 0; k < kNumberCount / kThreadCount; k++){
-			printf("%d\t", random_numbers[j]);
-			j++;
-		}
-		printf("\n");
-	}
-	printf("\n");
 	*/
 	
-	/*
-	j = 0;
-	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
-		for(k = 0; k < kNumbersPerRow; k++){
-			printf("%d\t", random_numbers[j]);
-			j++;
-		}
-		printf("\n");
-	}
-	*/
+	//输出数组
 	output(random_numbers);
 	return 0;
 }
@@ -200,7 +146,7 @@ void output(int array[]){
 	int i, j = 0, k;
 	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
 		for(k = 0; k < kNumbersPerRow; k++){
-			printf("%d\t", array[j]);
+			printf("%6d ", array[j]);
 			j++;
 		}
 		printf("\n");
