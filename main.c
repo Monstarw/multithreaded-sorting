@@ -59,7 +59,7 @@ int main(){
 		pthread_join(threads[i], NULL);
 	}
 	
-	//输出排序结果
+	//输出各线程排序结果
 	printf("\n");
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
@@ -70,6 +70,28 @@ int main(){
 		printf("\n");
 	}
 	printf("\n");
+	
+	//归并三个线程的排序结果
+	parameters * merge_param = (parameters *) malloc(sizeof(parameters));
+	merge_param->numbers = &random_numbers;
+	merge_param->start = 0;
+	merge_param->end = kNumberCount - 1;
+	
+	pthread_t merge;
+	pthread_create(&merge, NULL, bubble_sort, (void *) merge_param);
+	pthread_join(merge, NULL);
+	
+	//输出归并后最终数组
+	j = 0;
+	for(i = 0; i < kThreadCount; i++){
+		for(k = 0; k < kNumberCount / kThreadCount; k++){
+			printf("%d\t", random_numbers[j]);
+			j++;
+		}
+		printf("\n");
+	}
+	printf("\n");
+	
 	return 0;
 }
 
