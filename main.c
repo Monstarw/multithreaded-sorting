@@ -14,7 +14,7 @@ typedef struct parameters{
 	int end;
 }parameters;
 
-void initialize_threads(int numbers[]);
+void initialize_threads(int (* numbers[]));
 void * bubble_sort(void * params);
 void * selection_sort(void * params);
 void * insertion_sort(void * params);
@@ -81,7 +81,7 @@ void initialize_threads(int (* numbers[])){
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(threads[i], NULL);
 	}
-	output(numbers);
+	//output(numbers);
 }
 
 //Ã°ÅÝÅÅÐò
