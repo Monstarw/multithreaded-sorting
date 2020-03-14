@@ -3,9 +3,9 @@
 #include <pthread.h>
 #include <time.h>
 #include <stdbool.h>
-#define kNumberCount 30	//定义乱序数组中元素个数
-#define kNumberCap 100	//定义乱序数组中元素值的上限
-#define kThreadCount 3
+#define kNumberCount 90	//定义乱序数组中元素个数
+#define kNumberCap 900	//定义乱序数组中元素值的上限
+#define kThreadCount 6
 
 typedef struct parameters{
 	int (* numbers)[kNumberCount];
