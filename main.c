@@ -47,7 +47,7 @@ int main(){
 	pthread_t threads[kThreadCount];
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);
+		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(threads[i], NULL);
