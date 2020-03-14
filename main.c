@@ -67,7 +67,7 @@ void initialize_threads(int numbers[]){
 	parameters * param[kThreadCount];
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));
-		param[i]->numbers = &numbers;
+		param[i]->numbers = numbers;
 		param[i]->start = j;
 		j = j + kNumberCount / kThreadCount;
 		param[i]->end = j - 1;
