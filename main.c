@@ -5,44 +5,40 @@
 #include <stdbool.h>
 #define kNumberCount 90		//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
-#define kThreadCount 3
-#define kNumbersPerRow 30
+#define kThreadCount 3		//线程数
+#define kNumbersPerRow 30	//输出时每行显示的元素数量
 
-typedef struct parameters{
-	int (* numbers)[kNumberCount];
-	int start;
-	int end;
+typedef struct parameters{	//包含排序线程所需参数的结构体
+	int (* numbers)[kNumberCount];	//待排序数组的指针
+	int start;	//排序起点下标
+	int end;	//排序终点下标
 }parameters;
 
-void initialize_threads(int numbers[]);
-void * bubble_sort(void * params);
-void * selection_sort(void * params);
-void * insertion_sort(void * params);
-void output(int array[]);
+//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
+void initialize_threads(int numbers[]);	
+void * bubble_sort(void * params);		//冒泡排序
+void * selection_sort(void * params);	//选择排序
+void * insertion_sort(void * params);	//插入排序
+void output(int array[]);	//按行输出数组内容
 
 int main(){
 	int i;
-	int random_numbers[kNumberCount];
-	int nums_for_bubble[kNumberCount];
-	int nums_for_selection[kNumberCount];
-	int nums_for_insertion[kNumberCount];
-	
-	//int thread_count;	//使用的线程个数
+	int random_numbers[kNumberCount];		//乱序数组
+	int nums_for_bubble[kNumberCount];		//进行冒泡排序的数组
+	int nums_for_selection[kNumberCount];	//进行选择排序的数组
+	int nums_for_insertion[kNumberCount];	//进行插入排序的数组
 	
 	srand((unsigned) time(0));	//初始化随机数生成种子
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组
-		random_numbers[i] = rand() % kNumberCap;
-		nums_for_bubble[i] = random_numbers[i];
-		nums_for_selection[i] = random_numbers[i];
-		nums_for_insertion[i] = random_numbers[i];
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		random_numbers[i] = rand() % kNumberCap;	//为每个元素赋值一个小于kNumberCap的随机数
+		nums_for_bubble[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+		nums_for_selection[i] = random_numbers[i];	//复制到进行选择排序的数组
+		nums_for_insertion[i] = random_numbers[i];	//复制到进行插入排序的数组
 	}
 	
 	//输出乱序数组
-	
-	//printf("请输入使用的线程个数(3/5/6):");
-	//scanf("%d", &thread_count);
 
-	//分配各线程所需参数
+	//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
 	initialize_threads(nums_for_bubble);
 	
 	//归并各个线程的排序结果
@@ -62,26 +58,30 @@ int main(){
 	return 0;
 }
 
+//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
 void initialize_threads(int numbers[]){
 	int i, j = 0;
-	parameters * param[kThreadCount];
+	parameters * param[kThreadCount];	//建立结构体
 	for(i = 0; i < kThreadCount; i++){
-		param[i] = (parameters *) malloc(sizeof(parameters));
-		param[i]->numbers = (int *) &numbers;
-		param[i]->start = j;
-		j = j + kNumberCount / kThreadCount;
-		param[i]->end = j - 1;
+		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
+		
+		/*↓↓↓↓↓  error when compiling: assignment from incompatible pointer type ↓↓↓↓↓*/
+		param[i]->numbers = &numbers;	//待排序数组的指针
+		
+		param[i]->start = j;	//排序起点下标
+		j = j + kNumberCount / kThreadCount;	//更新终点位置
+		param[i]->end = j - 1;	//排序终点下标
 	}
 	
-	pthread_t threads[kThreadCount];
+	pthread_t threads[kThreadCount];	//声明线程数组
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);
+		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
 	}
 	for(i = 0; i < kThreadCount; i++){
-		pthread_join(threads[i], NULL);
+		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
-	//output(numbers);
+	//output(numbers);	//输出数组
 }
 
 //冒泡排序
@@ -91,15 +91,18 @@ void * bubble_sort(void * params){
 	int start = data->start;
 	int end = data->end;
 	int i, j, swap_temp;
+	bool is_sorted;	//标记本次遍历时数组是否已经有序
 	
 	for(i = start; i <= end; i++){
 	//数组的总遍历
-		bool is_sorted = true;
+		is_sorted = true;
 		for(j = start; j <= start + end - 1 - i; j++){
 		//比较每一对相邻元素，同时避免对最大元素的多余比较
 			if((*data->numbers)[j] > (*data->numbers)[j + 1]){
 			//比较相邻元素大小，前面>后面则交换
+				//若发生交换则标记此时数组为非有序状态
 				is_sorted = false;
+				//交换元素
 				swap_temp = (*data->numbers)[j];
 				(*data->numbers)[j] = (*data->numbers)[j + 1];
 				(*data->numbers)[j + 1] = swap_temp;
@@ -159,6 +162,7 @@ void * insertion_sort(void * params){
 void output(int array[]){
 	int i, j = 0, k;
 	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
+	//循环次数为输出所有元素所需行数
 		for(k = 0; k < kNumbersPerRow; k++){
 			printf("%6d ", array[j]);
 			j++;
