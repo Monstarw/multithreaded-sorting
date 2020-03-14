@@ -62,12 +62,12 @@ int main(){
 	return 0;
 }
 
-void initialize_threads(int numbers[]){
+void initialize_threads(int (* numbers[])){
 	int i, j = 0;
 	parameters * param[kThreadCount];
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));
-		param[i]->numbers = &(&numbers);
+		param[i]->numbers = numbers;
 		param[i]->start = j;
 		j = j + kNumberCount / kThreadCount;
 		param[i]->end = j - 1;
