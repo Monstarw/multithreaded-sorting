@@ -62,12 +62,14 @@ int main(){
 //初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
 void initialize_threads(int (* numbers[])){
 	int i, j = 0;
+	int * p;
 	parameters * param[kThreadCount];	//建立结构体
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
 		
 		/*↓↓↓↓↓  error when compiling: assignment from incompatible pointer type ↓↓↓↓↓*/
-		param[i]->numbers = &numbers;	//待排序数组的指针
+		p = numbers;
+		param[i]->numbers = &p;	//待排序数组的指针
 		
 		param[i]->start = j;	//排序起点下标
 		j = j + kNumberCount / kThreadCount;	//更新终点位置
