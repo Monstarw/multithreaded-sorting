@@ -39,7 +39,8 @@ int main(){
 	//输出乱序数组
 
 	//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-	initialize_threads(nums_for_bubble);
+	int * pNumsForBubble = nums_for_bubble;
+	initialize_threads(pNumsForBubble);
 	
 	//归并各个线程的排序结果
 	/*
@@ -59,7 +60,7 @@ int main(){
 }
 
 //初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-void initialize_threads(int numbers[]){
+void initialize_threads(int (* numbers[])){
 	int i, j = 0;
 	parameters * param[kThreadCount];	//建立结构体
 	for(i = 0; i < kThreadCount; i++){
