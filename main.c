@@ -22,6 +22,7 @@ void * insertion_sort(void * params);	//插入排序
 void output(int array[]);	//按行输出数组内容
 
 int main(){
+	int i, j = 0;
 	int random_numbers[kNumberCount];		//乱序数组
 	int nums_for_bubble[kNumberCount];		//进行冒泡排序的数组
 	int nums_for_selection[kNumberCount];	//进行选择排序的数组
@@ -39,7 +40,6 @@ int main(){
 
 	//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
 	//initialize_threads(nums_for_bubble);
-	int i, j = 0;
 	parameters * param[kThreadCount];	//建立结构体
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
