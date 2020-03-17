@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #define kNumberCount 90		//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
-#define kThreadCount 3		//线程数
-#define kNumbersPerRow 30	//输出时每行显示的元素数量
+#define kThreadCount 6		//线程数
+#define kNumbersPerRow 15	//输出时每行显示的元素数量
 
 typedef struct parameters{	//包含排序线程所需参数的结构体
 	int (* numbers)[kNumberCount];	//待排序数组的指针
