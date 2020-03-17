@@ -69,6 +69,11 @@ int main(){
 	//output(nums_for_bubble);	//输出数组
 	////////////////////////////////////////////////////////
 
+	//重置数组
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		nums_for_bubble[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+	}
+
 	////////////////////////////////////////////////////////
 	//调用5线程冒泡
 	j = 0;
@@ -89,6 +94,11 @@ int main(){
 	printf("\n5线程冒泡排序用时 %f 秒\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_bubble);	//输出数组
 	////////////////////////////////////////////////////////
+	
+	//重置数组
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		nums_for_bubble[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+	}
 	
 	////////////////////////////////////////////////////////
 	//调用6线程冒泡
@@ -132,6 +142,11 @@ int main(){
 	//output(nums_for_selection);	//输出数组
 	////////////////////////////////////////////////////////
 	
+	//重置数组
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		nums_for_selection[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+	}
+	
 	////////////////////////////////////////////////////////
 	//调用5线程选择
 	j = 0;
@@ -152,6 +167,11 @@ int main(){
 	printf("\n5线程选择排序用时 %f 秒\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_selection);	//输出数组
 	////////////////////////////////////////////////////////
+	
+	//重置数组
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		nums_for_selection[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+	}
 	
 	////////////////////////////////////////////////////////
 	//调用6线程选择
@@ -195,6 +215,11 @@ int main(){
 	//output(nums_for_insertion);	//输出数组
 	////////////////////////////////////////////////////////
 	
+	//重置数组
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		nums_for_insertion[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+	}
+	
 	////////////////////////////////////////////////////////
 	//调用5线程插入
 	j = 0;
@@ -215,6 +240,11 @@ int main(){
 	printf("\n5线程插入排序用时 %f 秒\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_insertion);	//输出数组
 	////////////////////////////////////////////////////////
+	
+	//重置数组
+	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
+		nums_for_insertion[i] = random_numbers[i];		//复制到进行冒泡排序的数组
+	}
 	
 	////////////////////////////////////////////////////////
 	//调用6线程插入
