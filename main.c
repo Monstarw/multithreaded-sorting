@@ -22,7 +22,7 @@ void * insertion_sort(void * params);	//插入排序
 void output(int array[]);	//按行输出数组内容
 
 int main(){
-	int i, j = 0;
+	int i, j;
 	int random_numbers[kNumberCount];		//乱序数组
 	int nums_for_bubble[kNumberCount];		//进行冒泡排序的数组
 	int nums_for_selection[kNumberCount];	//进行选择排序的数组
@@ -36,11 +36,17 @@ int main(){
 		nums_for_insertion[i] = random_numbers[i];	//复制到进行插入排序的数组
 	}
 	
+	parameters * param[kThreadCount];	//建立结构体
+	pthread_t threads[kThreadCount];	//声明线程数组
+	
 	//输出乱序数组
 
 	//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
 	//initialize_threads(nums_for_bubble);
-	parameters * param[kThreadCount];	//建立结构体
+	
+	////////////////////////////////////////////////////////
+	//调用冒泡
+	j = 0;
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
 		param[i]->numbers = &nums_for_bubble;	//待排序数组的指针
@@ -48,9 +54,6 @@ int main(){
 		j = j + kNumberCount / kThreadCount;	//更新终点位置
 		param[i]->end = j - 1;	//排序终点下标
 	}
-	
-	pthread_t threads[kThreadCount];	//声明线程数组
-	
 	for(i = 0; i < kThreadCount; i++){
 		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
 	}
@@ -58,6 +61,45 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	output(nums_for_bubble);	//输出数组
+	////////////////////////////////////////////////////////
+	printf("\n");
+	////////////////////////////////////////////////////////
+	//调用选择
+	j = 0;
+	for(i = 0; i < kThreadCount; i++){
+		//param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
+		param[i]->numbers = &nums_for_selection;	//待排序数组的指针
+		param[i]->start = j;	//排序起点下标
+		j = j + kNumberCount / kThreadCount;	//更新终点位置
+		param[i]->end = j - 1;	//排序终点下标
+	}
+	for(i = 0; i < kThreadCount; i++){
+		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//建立数组
+	}
+	for(i = 0; i < kThreadCount; i++){
+		pthread_join(threads[i], NULL);	//等待线程运行完毕
+	}
+	output(nums_for_selection);	//输出数组
+	////////////////////////////////////////////////////////
+	printf("\n");
+	////////////////////////////////////////////////////////
+	//调用插入
+	j = 0;
+	for(i = 0; i < kThreadCount; i++){
+		//param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
+		param[i]->numbers = &nums_for_insertion;	//待排序数组的指针
+		param[i]->start = j;	//排序起点下标
+		j = j + kNumberCount / kThreadCount;	//更新终点位置
+		param[i]->end = j - 1;	//排序终点下标
+	}
+	for(i = 0; i < kThreadCount; i++){
+		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//建立数组
+	}
+	for(i = 0; i < kThreadCount; i++){
+		pthread_join(threads[i], NULL);	//等待线程运行完毕
+	}
+	output(nums_for_insertion);	//输出数组
+	////////////////////////////////////////////////////////
 	
 	//归并各个线程的排序结果
 	/*
