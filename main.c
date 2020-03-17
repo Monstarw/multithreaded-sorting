@@ -22,7 +22,6 @@ void * insertion_sort(void * params);	//插入排序
 void output(int array[]);	//按行输出数组内容
 
 int main(){
-	int i;
 	int random_numbers[kNumberCount];		//乱序数组
 	int nums_for_bubble[kNumberCount];		//进行冒泡排序的数组
 	int nums_for_selection[kNumberCount];	//进行选择排序的数组
