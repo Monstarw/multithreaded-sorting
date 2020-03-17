@@ -3,7 +3,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <stdbool.h>
-#define kNumberCount 9000		//定义乱序数组中元素个数
+#define kNumberCount 90000		//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
 #define kThreadCount 3		//线程数
 #define kNumbersPerRow 30	//输出时每行显示的元素数量
