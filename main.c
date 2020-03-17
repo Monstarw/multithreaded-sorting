@@ -46,6 +46,7 @@ int main(){
 	
 	////////////////////////////////////////////////////////
 	//调用冒泡
+	clock_t bubble_start, bubble_end;
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
@@ -54,17 +55,21 @@ int main(){
 		j = j + kNumberCount / kThreadCount;	//更新终点位置
 		param[i]->end = j - 1;	//排序终点下标
 	}
+	bubble_start = clock();
 	for(i = 0; i < kThreadCount; i++){
 		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
-	output(nums_for_bubble);	//输出数组
+	bubble_end = clock();
+	printf("\n%f\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC;);
+	//output(nums_for_bubble);	//输出数组
 	////////////////////////////////////////////////////////
-	printf("\n");
+	
 	////////////////////////////////////////////////////////
 	//调用选择
+	clock_t selection_start, selection_end;
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
 		//param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
@@ -73,17 +78,21 @@ int main(){
 		j = j + kNumberCount / kThreadCount;	//更新终点位置
 		param[i]->end = j - 1;	//排序终点下标
 	}
+	selection_start = clock();
 	for(i = 0; i < kThreadCount; i++){
 		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//建立数组
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
-	output(nums_for_selection);	//输出数组
+	selection_end = clock();
+	printf("\n%f\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC;);
+	//output(nums_for_selection);	//输出数组
 	////////////////////////////////////////////////////////
-	printf("\n");
+	
 	////////////////////////////////////////////////////////
 	//调用插入
+	clock_t insertion_start, insertion_end;
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
 		//param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
@@ -92,13 +101,16 @@ int main(){
 		j = j + kNumberCount / kThreadCount;	//更新终点位置
 		param[i]->end = j - 1;	//排序终点下标
 	}
+	insertion_start = clock();
 	for(i = 0; i < kThreadCount; i++){
 		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//建立数组
 	}
 	for(i = 0; i < kThreadCount; i++){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
-	output(nums_for_insertion);	//输出数组
+	insertion_end = clock();
+	printf("\n%f\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC;);
+	//output(nums_for_insertion);	//输出数组
 	////////////////////////////////////////////////////////
 	
 	//归并各个线程的排序结果
