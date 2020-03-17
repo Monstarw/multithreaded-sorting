@@ -3,117 +3,117 @@
 #include <pthread.h>
 #include <time.h>
 #include <stdbool.h>
-#define kNumberCount 90000		//¶¨ÒåÂÒĞòÊı×éÖĞÔªËØ¸öÊı
-#define kNumberCap 999999	//¶¨ÒåÂÒĞòÊı×éÖĞÔªËØÖµµÄÉÏÏŞ
-#define kThreadCount 5		//Ïß³ÌÊı
-#define kNumbersPerRow 30	//Êä³öÊ±Ã¿ĞĞÏÔÊ¾µÄÔªËØÊıÁ¿
+#define kNumberCount 90000		//å®šä¹‰ä¹±åºæ•°ç»„ä¸­å…ƒç´ ä¸ªæ•°
+#define kNumberCap 999999	//å®šä¹‰ä¹±åºæ•°ç»„ä¸­å…ƒç´ å€¼çš„ä¸Šé™
+#define kThreadCount 5		//çº¿ç¨‹æ•°
+#define kNumbersPerRow 30	//è¾“å‡ºæ—¶æ¯è¡Œæ˜¾ç¤ºçš„å…ƒç´ æ•°é‡
 
-typedef struct parameters{	//°üº¬ÅÅĞòÏß³ÌËùĞè²ÎÊıµÄ½á¹¹Ìå
-	int (* numbers)[kNumberCount];	//´ıÅÅĞòÊı×éµÄÖ¸Õë
-	int start;	//ÅÅĞòÆğµãÏÂ±ê
-	int end;	//ÅÅĞòÖÕµãÏÂ±ê
+typedef struct parameters{	//åŒ…å«æ’åºçº¿ç¨‹æ‰€éœ€å‚æ•°çš„ç»“æ„ä½“
+	int (* numbers)[kNumberCount];	//å¾…æ’åºæ•°ç»„çš„æŒ‡é’ˆ
+	int start;	//æ’åºèµ·ç‚¹ä¸‹æ ‡
+	int end;	//æ’åºç»ˆç‚¹ä¸‹æ ‡
 }parameters;
 
-//³õÊ¼»¯Ïß³Ì£¨·ÖÅäÏß³Ì½á¹¹Ìå²ÎÊı¡¢½¨Á¢Ïß³Ì¡¢µÈ´ıÏß³ÌÔËĞĞÍê±Ï£©
+//åˆå§‹åŒ–çº¿ç¨‹ï¼ˆåˆ†é…çº¿ç¨‹ç»“æ„ä½“å‚æ•°ã€å»ºç«‹çº¿ç¨‹ã€ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•ï¼‰
 //void initialize_threads(int numbers[]);	
-void * bubble_sort(void * params);		//Ã°ÅİÅÅĞò
-void * selection_sort(void * params);	//Ñ¡ÔñÅÅĞò
-void * insertion_sort(void * params);	//²åÈëÅÅĞò
-void output(int array[]);	//°´ĞĞÊä³öÊı×éÄÚÈİ
+void * bubble_sort(void * params);		//å†’æ³¡æ’åº
+void * selection_sort(void * params);	//é€‰æ‹©æ’åº
+void * insertion_sort(void * params);	//æ’å…¥æ’åº
+void output(int array[]);	//æŒ‰è¡Œè¾“å‡ºæ•°ç»„å†…å®¹
 
 int main(){
 	int i, j;
-	int random_numbers[kNumberCount];		//ÂÒĞòÊı×é
-	int nums_for_bubble[kNumberCount];		//½øĞĞÃ°ÅİÅÅĞòµÄÊı×é
-	int nums_for_selection[kNumberCount];	//½øĞĞÑ¡ÔñÅÅĞòµÄÊı×é
-	int nums_for_insertion[kNumberCount];	//½øĞĞ²åÈëÅÅĞòµÄÊı×é
+	int random_numbers[kNumberCount];		//ä¹±åºæ•°ç»„
+	int nums_for_bubble[kNumberCount];		//è¿›è¡Œå†’æ³¡æ’åºçš„æ•°ç»„
+	int nums_for_selection[kNumberCount];	//è¿›è¡Œé€‰æ‹©æ’åºçš„æ•°ç»„
+	int nums_for_insertion[kNumberCount];	//è¿›è¡Œæ’å…¥æ’åºçš„æ•°ç»„
 	
-	srand((unsigned) time(0));	//³õÊ¼»¯Ëæ»úÊıÉú³ÉÖÖ×Ó
-	for(i = 0; i < kNumberCount; i++){	//³õÊ¼»¯ÂÒĞòÊı×é¼°Èı¸ö²»Í¬Ëã·¨ËùĞèÊı×é
-		random_numbers[i] = rand() % kNumberCap;	//ÎªÃ¿¸öÔªËØ¸³ÖµÒ»¸öĞ¡ÓÚkNumberCapµÄËæ»úÊı
-		nums_for_bubble[i] = random_numbers[i];		//¸´ÖÆµ½½øĞĞÃ°ÅİÅÅĞòµÄÊı×é
-		nums_for_selection[i] = random_numbers[i];	//¸´ÖÆµ½½øĞĞÑ¡ÔñÅÅĞòµÄÊı×é
-		nums_for_insertion[i] = random_numbers[i];	//¸´ÖÆµ½½øĞĞ²åÈëÅÅĞòµÄÊı×é
+	srand((unsigned) time(0));	//åˆå§‹åŒ–éšæœºæ•°ç”Ÿæˆç§å­
+	for(i = 0; i < kNumberCount; i++){	//åˆå§‹åŒ–ä¹±åºæ•°ç»„åŠä¸‰ä¸ªä¸åŒç®—æ³•æ‰€éœ€æ•°ç»„
+		random_numbers[i] = rand() % kNumberCap;	//ä¸ºæ¯ä¸ªå…ƒç´ èµ‹å€¼ä¸€ä¸ªå°äºkNumberCapçš„éšæœºæ•°
+		nums_for_bubble[i] = random_numbers[i];		//å¤åˆ¶åˆ°è¿›è¡Œå†’æ³¡æ’åºçš„æ•°ç»„
+		nums_for_selection[i] = random_numbers[i];	//å¤åˆ¶åˆ°è¿›è¡Œé€‰æ‹©æ’åºçš„æ•°ç»„
+		nums_for_insertion[i] = random_numbers[i];	//å¤åˆ¶åˆ°è¿›è¡Œæ’å…¥æ’åºçš„æ•°ç»„
 	}
 	
-	parameters * param[kThreadCount];	//½¨Á¢½á¹¹Ìå
-	pthread_t threads[kThreadCount];	//ÉùÃ÷Ïß³ÌÊı×é
+	parameters * param[kThreadCount];	//å»ºç«‹ç»“æ„ä½“
+	pthread_t threads[kThreadCount];	//å£°æ˜çº¿ç¨‹æ•°ç»„
 	
-	//Êä³öÂÒĞòÊı×é
+	//è¾“å‡ºä¹±åºæ•°ç»„
 
-	//³õÊ¼»¯Ïß³Ì£¨·ÖÅäÏß³Ì½á¹¹Ìå²ÎÊı¡¢½¨Á¢Ïß³Ì¡¢µÈ´ıÏß³ÌÔËĞĞÍê±Ï£©
+	//åˆå§‹åŒ–çº¿ç¨‹ï¼ˆåˆ†é…çº¿ç¨‹ç»“æ„ä½“å‚æ•°ã€å»ºç«‹çº¿ç¨‹ã€ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•ï¼‰
 	//initialize_threads(nums_for_bubble);
 	
 	////////////////////////////////////////////////////////
-	//µ÷ÓÃÃ°Åİ
+	//è°ƒç”¨å†’æ³¡
 	clock_t bubble_start, bubble_end;
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
-		param[i] = (parameters *) malloc(sizeof(parameters));	//·ÖÅäËùĞèÄÚ´æ¿Õ¼ä
-		param[i]->numbers = &nums_for_bubble;	//´ıÅÅĞòÊı×éµÄÖ¸Õë
-		param[i]->start = j;	//ÅÅĞòÆğµãÏÂ±ê
-		j = j + kNumberCount / kThreadCount;	//¸üĞÂÖÕµãÎ»ÖÃ
-		param[i]->end = j - 1;	//ÅÅĞòÖÕµãÏÂ±ê
+		param[i] = (parameters *) malloc(sizeof(parameters));	//åˆ†é…æ‰€éœ€å†…å­˜ç©ºé—´
+		param[i]->numbers = &nums_for_bubble;	//å¾…æ’åºæ•°ç»„çš„æŒ‡é’ˆ
+		param[i]->start = j;	//æ’åºèµ·ç‚¹ä¸‹æ ‡
+		j = j + kNumberCount / kThreadCount;	//æ›´æ–°ç»ˆç‚¹ä½ç½®
+		param[i]->end = j - 1;	//æ’åºç»ˆç‚¹ä¸‹æ ‡
 	}
 	bubble_start = clock();
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//½¨Á¢Êı×é
+		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//å»ºç«‹æ•°ç»„
 	}
 	for(i = 0; i < kThreadCount; i++){
-		pthread_join(threads[i], NULL);	//µÈ´ıÏß³ÌÔËĞĞÍê±Ï
+		pthread_join(threads[i], NULL);	//ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•
 	}
 	bubble_end = clock();
-	printf("\nÃ°ÅİÅÅĞòÓÃÊ± %f Ãë\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_bubble);	//Êä³öÊı×é
+	printf("\nå†’æ³¡æ’åºç”¨æ—¶ %f ç§’\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
+	//output(nums_for_bubble);	//è¾“å‡ºæ•°ç»„
 	////////////////////////////////////////////////////////
 	
 	////////////////////////////////////////////////////////
-	//µ÷ÓÃÑ¡Ôñ
+	//è°ƒç”¨é€‰æ‹©
 	clock_t selection_start, selection_end;
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
-		//param[i] = (parameters *) malloc(sizeof(parameters));	//·ÖÅäËùĞèÄÚ´æ¿Õ¼ä
-		param[i]->numbers = &nums_for_selection;	//´ıÅÅĞòÊı×éµÄÖ¸Õë
-		param[i]->start = j;	//ÅÅĞòÆğµãÏÂ±ê
-		j = j + kNumberCount / kThreadCount;	//¸üĞÂÖÕµãÎ»ÖÃ
-		param[i]->end = j - 1;	//ÅÅĞòÖÕµãÏÂ±ê
+		//param[i] = (parameters *) malloc(sizeof(parameters));	//åˆ†é…æ‰€éœ€å†…å­˜ç©ºé—´
+		param[i]->numbers = &nums_for_selection;	//å¾…æ’åºæ•°ç»„çš„æŒ‡é’ˆ
+		param[i]->start = j;	//æ’åºèµ·ç‚¹ä¸‹æ ‡
+		j = j + kNumberCount / kThreadCount;	//æ›´æ–°ç»ˆç‚¹ä½ç½®
+		param[i]->end = j - 1;	//æ’åºç»ˆç‚¹ä¸‹æ ‡
 	}
 	selection_start = clock();
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//½¨Á¢Êı×é
+		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//å»ºç«‹æ•°ç»„
 	}
 	for(i = 0; i < kThreadCount; i++){
-		pthread_join(threads[i], NULL);	//µÈ´ıÏß³ÌÔËĞĞÍê±Ï
+		pthread_join(threads[i], NULL);	//ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•
 	}
 	selection_end = clock();
-	printf("\nÑ¡ÔñÅÅĞòÓÃÊ± %f Ãë\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_selection);	//Êä³öÊı×é
+	printf("\né€‰æ‹©æ’åºç”¨æ—¶ %f ç§’\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
+	//output(nums_for_selection);	//è¾“å‡ºæ•°ç»„
 	////////////////////////////////////////////////////////
 	
 	////////////////////////////////////////////////////////
-	//µ÷ÓÃ²åÈë
+	//è°ƒç”¨æ’å…¥
 	clock_t insertion_start, insertion_end;
 	j = 0;
 	for(i = 0; i < kThreadCount; i++){
-		//param[i] = (parameters *) malloc(sizeof(parameters));	//·ÖÅäËùĞèÄÚ´æ¿Õ¼ä
-		param[i]->numbers = &nums_for_insertion;	//´ıÅÅĞòÊı×éµÄÖ¸Õë
-		param[i]->start = j;	//ÅÅĞòÆğµãÏÂ±ê
-		j = j + kNumberCount / kThreadCount;	//¸üĞÂÖÕµãÎ»ÖÃ
-		param[i]->end = j - 1;	//ÅÅĞòÖÕµãÏÂ±ê
+		//param[i] = (parameters *) malloc(sizeof(parameters));	//åˆ†é…æ‰€éœ€å†…å­˜ç©ºé—´
+		param[i]->numbers = &nums_for_insertion;	//å¾…æ’åºæ•°ç»„çš„æŒ‡é’ˆ
+		param[i]->start = j;	//æ’åºèµ·ç‚¹ä¸‹æ ‡
+		j = j + kNumberCount / kThreadCount;	//æ›´æ–°ç»ˆç‚¹ä½ç½®
+		param[i]->end = j - 1;	//æ’åºç»ˆç‚¹ä¸‹æ ‡
 	}
 	insertion_start = clock();
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//½¨Á¢Êı×é
+		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//å»ºç«‹æ•°ç»„
 	}
 	for(i = 0; i < kThreadCount; i++){
-		pthread_join(threads[i], NULL);	//µÈ´ıÏß³ÌÔËĞĞÍê±Ï
+		pthread_join(threads[i], NULL);	//ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•
 	}
 	insertion_end = clock();
-	printf("\n²åÈëÅÅĞòÓÃÊ± %f Ãë\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_insertion);	//Êä³öÊı×é
+	printf("\næ’å…¥æ’åºç”¨æ—¶ %f ç§’\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
+	//output(nums_for_insertion);	//è¾“å‡ºæ•°ç»„
 	////////////////////////////////////////////////////////
 	
-	//¹é²¢¸÷¸öÏß³ÌµÄÅÅĞò½á¹û
+	//å½’å¹¶å„ä¸ªçº¿ç¨‹çš„æ’åºç»“æœ
 	/*
 	parameters * merge_param = (parameters *) malloc(sizeof(parameters));
 	merge_param->numbers = &random_numbers;
@@ -125,90 +125,90 @@ int main(){
 	pthread_join(merge, NULL);
 	*/
 	
-	//Êä³öÊı×é
+	//è¾“å‡ºæ•°ç»„
 	
 	return 0;
 }
 
 /*
-//³õÊ¼»¯Ïß³Ì£¨·ÖÅäÏß³Ì½á¹¹Ìå²ÎÊı¡¢½¨Á¢Ïß³Ì¡¢µÈ´ıÏß³ÌÔËĞĞÍê±Ï£©
+//åˆå§‹åŒ–çº¿ç¨‹ï¼ˆåˆ†é…çº¿ç¨‹ç»“æ„ä½“å‚æ•°ã€å»ºç«‹çº¿ç¨‹ã€ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•ï¼‰
 void initialize_threads(int (* numbers[])){
 	int i, j = 0;
 	int * p;
-	parameters * param[kThreadCount];	//½¨Á¢½á¹¹Ìå
+	parameters * param[kThreadCount];	//å»ºç«‹ç»“æ„ä½“
 	for(i = 0; i < kThreadCount; i++){
-		param[i] = (parameters *) malloc(sizeof(parameters));	//·ÖÅäËùĞèÄÚ´æ¿Õ¼ä
+		param[i] = (parameters *) malloc(sizeof(parameters));	//åˆ†é…æ‰€éœ€å†…å­˜ç©ºé—´
 		
-		//¡ı¡ı¡ı¡ı¡ı  error when compiling: assignment from incompatible pointer type ¡ı¡ı¡ı¡ı¡ı
+		//â†“â†“â†“â†“â†“  error when compiling: assignment from incompatible pointer type â†“â†“â†“â†“â†“
 		p = numbers;
-		param[i]->numbers = &p;	//´ıÅÅĞòÊı×éµÄÖ¸Õë
+		param[i]->numbers = &p;	//å¾…æ’åºæ•°ç»„çš„æŒ‡é’ˆ
 		
-		param[i]->start = j;	//ÅÅĞòÆğµãÏÂ±ê
-		j = j + kNumberCount / kThreadCount;	//¸üĞÂÖÕµãÎ»ÖÃ
-		param[i]->end = j - 1;	//ÅÅĞòÖÕµãÏÂ±ê
+		param[i]->start = j;	//æ’åºèµ·ç‚¹ä¸‹æ ‡
+		j = j + kNumberCount / kThreadCount;	//æ›´æ–°ç»ˆç‚¹ä½ç½®
+		param[i]->end = j - 1;	//æ’åºç»ˆç‚¹ä¸‹æ ‡
 	}
 	
-	pthread_t threads[kThreadCount];	//ÉùÃ÷Ïß³ÌÊı×é
+	pthread_t threads[kThreadCount];	//å£°æ˜çº¿ç¨‹æ•°ç»„
 	
 	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//½¨Á¢Êı×é
+		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//å»ºç«‹æ•°ç»„
 	}
 	for(i = 0; i < kThreadCount; i++){
-		pthread_join(threads[i], NULL);	//µÈ´ıÏß³ÌÔËĞĞÍê±Ï
+		pthread_join(threads[i], NULL);	//ç­‰å¾…çº¿ç¨‹è¿è¡Œå®Œæ¯•
 	}
-	//output(numbers);	//Êä³öÊı×é
+	//output(numbers);	//è¾“å‡ºæ•°ç»„
 }
 */
 
-//Ã°ÅİÅÅĞò
-//!!!ÓÅ»¯ÎªË«ÏòÃ°ÅİÅÅĞò£º´Óºóµ½Ç°±éÀú½«×îĞ¡Öµ¹éÎ»
+//å†’æ³¡æ’åº
+//!!!ä¼˜åŒ–ä¸ºåŒå‘å†’æ³¡æ’åºï¼šä»ååˆ°å‰éå†å°†æœ€å°å€¼å½’ä½
 void * bubble_sort(void * params){
 	parameters * data = (parameters *) params;
 	int start = data->start;
 	int end = data->end;
 	int i, j, swap_temp;
-	bool is_sorted;	//±ê¼Ç±¾´Î±éÀúÊ±Êı×éÊÇ·ñÒÑ¾­ÓĞĞò
+	bool is_sorted;	//æ ‡è®°æœ¬æ¬¡éå†æ—¶æ•°ç»„æ˜¯å¦å·²ç»æœ‰åº
 	
 	for(i = start; i <= end; i++){
-	//Êı×éµÄ×Ü±éÀú
+	//æ•°ç»„çš„æ€»éå†
 		is_sorted = true;
 		for(j = start; j <= start + end - 1 - i; j++){
-		//±È½ÏÃ¿Ò»¶ÔÏàÁÚÔªËØ£¬Í¬Ê±±ÜÃâ¶Ô×î´óÔªËØµÄ¶àÓà±È½Ï
+		//æ¯”è¾ƒæ¯ä¸€å¯¹ç›¸é‚»å…ƒç´ ï¼ŒåŒæ—¶é¿å…å¯¹æœ€å¤§å…ƒç´ çš„å¤šä½™æ¯”è¾ƒ
 			if((*data->numbers)[j] > (*data->numbers)[j + 1]){
-			//±È½ÏÏàÁÚÔªËØ´óĞ¡£¬Ç°Ãæ>ºóÃæÔò½»»»
-				//Èô·¢Éú½»»»Ôò±ê¼Ç´ËÊ±Êı×éÎª·ÇÓĞĞò×´Ì¬
+			//æ¯”è¾ƒç›¸é‚»å…ƒç´ å¤§å°ï¼Œå‰é¢>åé¢åˆ™äº¤æ¢
+				//è‹¥å‘ç”Ÿäº¤æ¢åˆ™æ ‡è®°æ­¤æ—¶æ•°ç»„ä¸ºéæœ‰åºçŠ¶æ€
 				is_sorted = false;
-				//½»»»ÔªËØ
+				//äº¤æ¢å…ƒç´ 
 				swap_temp = (*data->numbers)[j];
 				(*data->numbers)[j] = (*data->numbers)[j + 1];
 				(*data->numbers)[j + 1] = swap_temp;
 			}
 		}
 		if(is_sorted == true){
-		//Èô´Ë´Î±éÀúºóÊı×éÒÑ¾­ÓĞĞòÔòÖÕÖ¹ÅÅĞò
+		//è‹¥æ­¤æ¬¡éå†åæ•°ç»„å·²ç»æœ‰åºåˆ™ç»ˆæ­¢æ’åº
 			return NULL;
 		}
 	}
 	return NULL;
 }
 
-//Ñ¡ÔñÅÅĞò
-//!!!ÓÅ»¯ÎªË«ÏòÑ¡ÔñÅÅĞò£ºÍ¬Ê±½«×î´óÖµ¹éµ½×îºó
+//é€‰æ‹©æ’åº
+//!!!ä¼˜åŒ–ä¸ºåŒå‘é€‰æ‹©æ’åºï¼šåŒæ—¶å°†æœ€å¤§å€¼å½’åˆ°æœ€å
 void * selection_sort(void * params){
 	parameters * data = (parameters *) params;
 	int start = data->start;
 	int end = data->end;
 	int i, j, min_index, swap_temp;
 	for(i = start; i <= end; i++){
-	//Êı×éµÄ×Ü±éÀú
-		min_index = i;	//³õÊ¼»¯×îĞ¡ÔªËØÏÂ±ê
+	//æ•°ç»„çš„æ€»éå†
+		min_index = i;	//åˆå§‹åŒ–æœ€å°å…ƒç´ ä¸‹æ ‡
 		for(j = i + 1; j <= end; j++){
-		//ÕÒ³ö±¾´Î±éÀúÖĞ×îĞ¡ÔªËØµÄÏÂ±ê
+		//æ‰¾å‡ºæœ¬æ¬¡éå†ä¸­æœ€å°å…ƒç´ çš„ä¸‹æ ‡
 			if((*data->numbers)[j] < (*data->numbers)[min_index]){
 				min_index = j;
 			}
 		}
-		//½«±¾´Î±éÀúÖĞ×îĞ¡ÔªËØ»»µ½×îÇ°¶Ë
+		//å°†æœ¬æ¬¡éå†ä¸­æœ€å°å…ƒç´ æ¢åˆ°æœ€å‰ç«¯
 		swap_temp = (*data->numbers)[i];
 		(*data->numbers)[i] = (*data->numbers)[min_index];
 		(*data->numbers)[min_index] = swap_temp;
@@ -216,7 +216,7 @@ void * selection_sort(void * params){
 	return NULL;
 }
 
-//²åÈëÅÅĞò
+//æ’å…¥æ’åº
 void * insertion_sort(void * params){
 	parameters * data = (parameters *) params;
 	int start = data->start;
@@ -234,11 +234,11 @@ void * insertion_sort(void * params){
 	return NULL;
 }
 
-//Êä³öÊı×é
+//è¾“å‡ºæ•°ç»„
 void output(int array[]){
 	int i, j = 0, k;
 	for(i = 0; i < kNumberCount / kNumbersPerRow; i++){
-	//Ñ­»·´ÎÊıÎªÊä³öËùÓĞÔªËØËùĞèĞĞÊı
+	//å¾ªç¯æ¬¡æ•°ä¸ºè¾“å‡ºæ‰€æœ‰å…ƒç´ æ‰€éœ€è¡Œæ•°
 		for(k = 0; k < kNumbersPerRow; k++){
 			printf("%6d ", array[j]);
 			j++;
