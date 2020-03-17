@@ -63,7 +63,7 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	bubble_end = clock();
-	printf("\n%f\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC;
+	printf("\n%f\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_bubble);	//输出数组
 	////////////////////////////////////////////////////////
 	
@@ -86,7 +86,7 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	selection_end = clock();
-	printf("\n%f\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC;
+	printf("\n%f\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_selection);	//输出数组
 	////////////////////////////////////////////////////////
 	
@@ -109,7 +109,7 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	insertion_end = clock();
-	printf("\n%f\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC;
+	printf("\n%f\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_insertion);	//输出数组
 	////////////////////////////////////////////////////////
 	
