@@ -15,7 +15,7 @@ typedef struct parameters{	//包含排序线程所需参数的结构体
 }parameters;
 
 //初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-void initialize_threads(int numbers[]);	
+//void initialize_threads(int numbers[]);	
 void * bubble_sort(void * params);		//冒泡排序
 void * selection_sort(void * params);	//选择排序
 void * insertion_sort(void * params);	//插入排序
@@ -39,8 +39,26 @@ int main(){
 	//输出乱序数组
 
 	//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-	int * pNumsForBubble = nums_for_bubble;
-	initialize_threads(pNumsForBubble);
+	//initialize_threads(nums_for_bubble);
+	int i, j = 0;
+	parameters * param[kThreadCount];	//建立结构体
+	for(i = 0; i < kThreadCount; i++){
+		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
+		param[i]->numbers = &nums_for_bubble;	//待排序数组的指针
+		param[i]->start = j;	//排序起点下标
+		j = j + kNumberCount / kThreadCount;	//更新终点位置
+		param[i]->end = j - 1;	//排序终点下标
+	}
+	
+	pthread_t threads[kThreadCount];	//声明线程数组
+	
+	for(i = 0; i < kThreadCount; i++){
+		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
+	}
+	for(i = 0; i < kThreadCount; i++){
+		pthread_join(threads[i], NULL);	//等待线程运行完毕
+	}
+	output(nums_for_bubble);	//输出数组
 	
 	//归并各个线程的排序结果
 	/*
@@ -59,6 +77,7 @@ int main(){
 	return 0;
 }
 
+/*
 //初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
 void initialize_threads(int (* numbers[])){
 	int i, j = 0;
@@ -67,7 +86,7 @@ void initialize_threads(int (* numbers[])){
 	for(i = 0; i < kThreadCount; i++){
 		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
 		
-		/*↓↓↓↓↓  error when compiling: assignment from incompatible pointer type ↓↓↓↓↓*/
+		//↓↓↓↓↓  error when compiling: assignment from incompatible pointer type ↓↓↓↓↓
 		p = numbers;
 		param[i]->numbers = &p;	//待排序数组的指针
 		
@@ -86,6 +105,7 @@ void initialize_threads(int (* numbers[])){
 	}
 	//output(numbers);	//输出数组
 }
+*/
 
 //冒泡排序
 //!!!优化为双向冒泡排序：从后到前遍历将最小值归位
