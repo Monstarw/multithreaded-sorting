@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #define kNumberCount 90000		//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
-#define kThreadCount 3		//线程数
+#define kThreadCount 5		//线程数
 #define kNumbersPerRow 30	//输出时每行显示的元素数量
 
 typedef struct parameters{	//包含排序线程所需参数的结构体
@@ -63,7 +63,7 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	bubble_end = clock();
-	printf("\n%f\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
+	printf("\n冒泡排序用时 %f 秒\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_bubble);	//输出数组
 	////////////////////////////////////////////////////////
 	
@@ -86,7 +86,7 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	selection_end = clock();
-	printf("\n%f\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
+	printf("\n选择排序用时 %f 秒\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_selection);	//输出数组
 	////////////////////////////////////////////////////////
 	
@@ -109,7 +109,7 @@ int main(){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
 	insertion_end = clock();
-	printf("\n%f\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
+	printf("\n插入排序用时 %f 秒\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
 	//output(nums_for_insertion);	//输出数组
 	////////////////////////////////////////////////////////
 	
