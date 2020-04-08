@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #define kNumberCount 90000	//定义乱序数组中元素个数
 #define kNumberCap 999999	//定义乱序数组中元素值的上限
-#define kThreadCount 6		//线程数
 #define kNumbersPerRow 30	//输出时每行显示的元素数量
 
 typedef struct parameters{	//包含排序线程所需参数的结构体
@@ -15,7 +14,7 @@ typedef struct parameters{	//包含排序线程所需参数的结构体
 }parameters;
 
 //初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-//void initialize_threads(int numbers[]);	
+void initialize_threads(int thread_count, int sorting_method, int random_numbers[]);	
 void * bubble_sort(void * params);		//冒泡排序
 void * selection_sort(void * params);	//选择排序
 void * insertion_sort(void * params);	//插入排序
@@ -23,296 +22,78 @@ void output(int array[]);	//按行输出数组内容
 
 int main(){
 	int i, j;
-	int random_numbers[kNumberCount];		//乱序数组
-	int nums_for_bubble[kNumberCount];		//进行冒泡排序的数组
-	int nums_for_selection[kNumberCount];	//进行选择排序的数组
-	int nums_for_insertion[kNumberCount];	//进行插入排序的数组
-	clock_t bubble_start, bubble_end;
-	clock_t selection_start, selection_end;
-	clock_t insertion_start, insertion_end;
-	
+	int random_numbers[kNumberCount];	//乱序数组
+	int thread_count, sorting_method;
+	char c;
 	srand((unsigned) time(0));	//初始化随机数生成种子
 	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
 		random_numbers[i] = rand() % kNumberCap;	//为每个元素赋值一个小于kNumberCap的随机数
-		nums_for_bubble[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-		nums_for_selection[i] = random_numbers[i];	//复制到进行选择排序的数组
-		nums_for_insertion[i] = random_numbers[i];	//复制到进行插入排序的数组
 	}
-	
-	parameters * param[kThreadCount];	//建立结构体
-	for(i = 0; i < kThreadCount; i++){
-		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
+	while(1){
+		printf("请输入使用的线程数：");
+		scanf("%d", &thread_count);
+		printf("请输入使用的排序算法（1冒泡，2选择，3插入）：");
+		scanf("%d", &sorting_method);
+		//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
+		initialize_threads(thread_count, sorting_method, random_numbers);
 	}
-	pthread_t threads[kThreadCount];	//声明线程数组
-
-	//初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-	//initialize_threads(nums_for_bubble);
-	
-	////////////////////////////////////////////////////////
-	//调用3线程冒泡
-	j = 0;
-	for(i = 0; i < 3; i++){
-		param[i]->numbers = &nums_for_bubble;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 3;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	bubble_start = clock();
-	for(i = 0; i < 3; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 3; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	bubble_end = clock();
-	printf("\n3线程冒泡排序用时 %f 秒\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_bubble);	//输出数组
-	////////////////////////////////////////////////////////
-
-	//重置数组
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
-		nums_for_bubble[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-	}
-
-	////////////////////////////////////////////////////////
-	//调用5线程冒泡
-	j = 0;
-	for(i = 0; i < 5; i++){
-		param[i]->numbers = &nums_for_bubble;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 5;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	bubble_start = clock();
-	for(i = 0; i < 5; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 5; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	bubble_end = clock();
-	printf("\n5线程冒泡排序用时 %f 秒\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_bubble);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	//重置数组
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
-		nums_for_bubble[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-	}
-	
-	////////////////////////////////////////////////////////
-	//调用6线程冒泡
-	j = 0;
-	for(i = 0; i < 6; i++){
-		param[i]->numbers = &nums_for_bubble;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 6;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	bubble_start = clock();
-	for(i = 0; i < 6; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 6; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	bubble_end = clock();
-	printf("\n6线程冒泡排序用时 %f 秒\n", ((double) (bubble_end - bubble_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_bubble);	//输出数组
-	////////////////////////////////////////////////////////
-
-	////////////////////////////////////////////////////////
-	//调用3线程选择
-	j = 0;
-	for(i = 0; i < 3; i++){
-		param[i]->numbers = &nums_for_selection;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 3;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	selection_start = clock();
-	for(i = 0; i < 3; i++){
-		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 3; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	selection_end = clock();
-	printf("\n3线程选择排序用时 %f 秒\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_selection);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	//重置数组
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
-		nums_for_selection[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-	}
-	
-	////////////////////////////////////////////////////////
-	//调用5线程选择
-	j = 0;
-	for(i = 0; i < 5; i++){
-		param[i]->numbers = &nums_for_selection;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 5;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	selection_start = clock();
-	for(i = 0; i < 5; i++){
-		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 5; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	selection_end = clock();
-	printf("\n5线程选择排序用时 %f 秒\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_selection);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	//重置数组
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
-		nums_for_selection[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-	}
-	
-	////////////////////////////////////////////////////////
-	//调用6线程选择
-	j = 0;
-	for(i = 0; i < 6; i++){
-		param[i]->numbers = &nums_for_selection;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 6;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	selection_start = clock();
-	for(i = 0; i < 6; i++){
-		pthread_create(&threads[i], NULL, selection_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 6; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	selection_end = clock();
-	printf("\n6线程选择排序用时 %f 秒\n", ((double) (selection_end - selection_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_selection);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	////////////////////////////////////////////////////////
-	//调用3线程插入
-	j = 0;
-	for(i = 0; i < 3; i++){
-		param[i]->numbers = &nums_for_insertion;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 3;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	insertion_start = clock();
-	for(i = 0; i < 3; i++){
-		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 3; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	insertion_end = clock();
-	printf("\n3线程插入排序用时 %f 秒\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_insertion);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	//重置数组
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
-		nums_for_insertion[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-	}
-	
-	////////////////////////////////////////////////////////
-	//调用5线程插入
-	j = 0;
-	for(i = 0; i < 5; i++){
-		param[i]->numbers = &nums_for_insertion;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 5;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	insertion_start = clock();
-	for(i = 0; i < 5; i++){
-		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 5; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	insertion_end = clock();
-	printf("\n5线程插入排序用时 %f 秒\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_insertion);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	//重置数组
-	for(i = 0; i < kNumberCount; i++){	//初始化乱序数组及三个不同算法所需数组
-		nums_for_insertion[i] = random_numbers[i];		//复制到进行冒泡排序的数组
-	}
-	
-	////////////////////////////////////////////////////////
-	//调用6线程插入
-	j = 0;
-	for(i = 0; i < 6; i++){
-		param[i]->numbers = &nums_for_insertion;	//待排序数组的指针
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / 6;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
-	}
-	insertion_start = clock();
-	for(i = 0; i < 6; i++){
-		pthread_create(&threads[i], NULL, insertion_sort, (void *) param[i]);	//建立数组
-	}
-	for(i = 0; i < 6; i++){
-		pthread_join(threads[i], NULL);	//等待线程运行完毕
-	}
-	insertion_end = clock();
-	printf("\n6线程插入排序用时 %f 秒\n", ((double) (insertion_end - insertion_start)) / CLOCKS_PER_SEC);
-	//output(nums_for_insertion);	//输出数组
-	////////////////////////////////////////////////////////
-	
-	//归并各个线程的排序结果
-	/*
-	parameters * merge_param = (parameters *) malloc(sizeof(parameters));
-	merge_param->numbers = &random_numbers;
-	merge_param->start = 0;
-	merge_param->end = kNumberCount - 1;
-	
-	pthread_t merge;
-	pthread_create(&merge, NULL, bubble_sort, (void *) merge_param);
-	pthread_join(merge, NULL);
-	*/
-	
-	//输出数组
-	
 	return 0;
 }
 
-/*
 //初始化线程（分配线程结构体参数、建立线程、等待线程运行完毕）
-void initialize_threads(int (* numbers[])){
+void initialize_threads(int thread_count, int sorting_method, int random_numbers[]){
 	int i, j = 0;
-	int * p;
-	parameters * param[kThreadCount];	//建立结构体
-	for(i = 0; i < kThreadCount; i++){
-		param[i] = (parameters *) malloc(sizeof(parameters));	//分配所需内存空间
-		
-		//↓↓↓↓↓  error when compiling: assignment from incompatible pointer type ↓↓↓↓↓
-		p = numbers;
-		param[i]->numbers = &p;	//待排序数组的指针
-		
-		param[i]->start = j;	//排序起点下标
-		j = j + kNumberCount / kThreadCount;	//更新终点位置
-		param[i]->end = j - 1;	//排序终点下标
+	int numbers[kNumberCount];
+	clock_t start_time, end_time;
+	parameters * param = malloc(sizeof *param * thread_count);	//建立结构体并分配所需内存空间
+	pthread_t * threads = malloc(sizeof *threads * thread_count);	//声明线程数组
+	for(i = 0; i < kNumberCount; i++){	
+		numbers[i] = random_numbers[i];		//复制一份乱序数组
 	}
-	
-	pthread_t threads[kThreadCount];	//声明线程数组
-	
-	for(i = 0; i < kThreadCount; i++){
-		pthread_create(&threads[i], NULL, bubble_sort, (void *) param[i]);	//建立数组
+	for(i = 0; i < thread_count; i++){
+		param[i].numbers = &numbers;	//待排序数组的指针
+		param[i].start = j;	//排序起点下标
+		j = j + kNumberCount / thread_count;	//更新终点位置
+		param[i].end = j - 1;	//排序终点下标
 	}
-	for(i = 0; i < kThreadCount; i++){
+	switch(sorting_method){
+		case 1:
+			start_time = clock();
+			for(i = 0; i < thread_count; i++){
+				pthread_create(&threads[i], NULL, bubble_sort, &param[i]);	//执行冒泡线程
+			}
+			break;
+		case 2:
+			start_time = clock();
+			for(i = 0; i < thread_count; i++){
+				pthread_create(&threads[i], NULL, selection_sort, &param[i]);	//执行选择线程
+			}
+			break;
+		case 3:
+			start_time = clock();
+			for(i = 0; i < thread_count; i++){
+				pthread_create(&threads[i], NULL, insertion_sort, &param[i]);	//执行插入线程
+			}
+			break;
+	}
+	for(i = 0; i < thread_count; i++){
 		pthread_join(threads[i], NULL);	//等待线程运行完毕
 	}
+	end_time = clock();
+	double sorting_time = ((double) (end_time - start_time)) / CLOCKS_PER_SEC;
 	//output(numbers);	//输出数组
+	switch(sorting_method){
+		case 1:
+			printf("%d 线程冒泡排序用时 %f 秒\n", thread_count, sorting_time);
+			break;
+		case 2:
+			printf("%d 线程选择排序用时 %f 秒\n", thread_count, sorting_time);
+			break;
+		case 3:
+			printf("%d 线程插入排序用时 %f 秒\n", thread_count, sorting_time);
+			break;
+	}
 }
-*/
 
 //冒泡排序
 //!!!优化为双向冒泡排序：从后到前遍历将最小值归位
